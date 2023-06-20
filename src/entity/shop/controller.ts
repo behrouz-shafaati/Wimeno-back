@@ -63,6 +63,8 @@ class controller extends baseController {
   }
 
   async create({ params, saveLog }: Create): Promise<any> {
+    const countShops = await this.countUsersShops(params.userId);
+    if (countShops > 0) throw new Error("You have a shop before.");
     const shopStringId = params?.shopStringId;
     if (!shopStringId) throw new Error("Shop ID is required.");
     const isExistShopId = await this.isExistShopId(shopStringId);
@@ -100,6 +102,11 @@ class controller extends baseController {
   async listOfUserShops(userId: Id) {
     const listUserShops = await this.findAll({ filters: { userId } });
     return listUserShops.data;
+  }
+
+  async countUsersShops(userId: Id) {
+    const listUserShops = await this.findAll({ filters: { userId } });
+    return listUserShops.data.length;
   }
 
   async find(payload: QueryFind): Promise<any> {

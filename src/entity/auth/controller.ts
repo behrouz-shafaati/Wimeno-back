@@ -90,16 +90,25 @@ class controller extends c_controller {
     const headers = getHeaders(req);
     const deviceUUID = req.deviceUUID;
     if (!deviceUUID)
-      return res.status(400).json({
-        message: `deviceUUID is required. set in http header request ["Device-Uuid" = <uuid>]`,
-      });
+      // return res.status(400).json({
+      //   message: `deviceUUID is required. set in http header request ["Device-Uuid" = <uuid>]`,
+      // });
+      throw new Error(
+        `deviceUUID is required. set in http header request ["Device-Uuid" = <uuid>]`
+      );
+
     const { email, password } = req.body;
     if (!email || !password)
-      return res
-        .status(400)
-        .json({ message: "Username and password are required." });
+      // return res
+      //   .status(400)
+      //   .json({ message: "Username and password are required." });
+      throw new Error("Username and password are required.");
+
     const foundUser: User = await userCtrl.findOne({ filters: { email } });
-    if (!foundUser) return res.sendStatus(401); //Unauthorized
+    if (!foundUser)
+      // return res.sendStatus(401); //Unauthorized
+      throw new Error("Don't exist user.");
+
     // evaluate password
     const match = await bcrypt.compare(password, foundUser.passwordHash);
     if (match) {
@@ -109,7 +118,8 @@ class controller extends c_controller {
           return res.json({ redirect: `/verify-email?email=${email}` });
         } catch (error: any) {
           console.log(error?.message);
-          return res.status(400).json({ msg: "Unable to send verify email." });
+          // return res.status(400).json({ msg: "Unable to send verify email." });
+          throw new Error("Unable to send verify email.");
         }
       }
       // create JWTs
