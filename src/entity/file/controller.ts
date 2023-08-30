@@ -5,6 +5,8 @@ import fileSchema from "./schema";
 import fileService from "./service";
 import { NextFunction, Response } from "express";
 import createDir from "@/utils/createDirectory";
+import { createReadStream } from "fs";
+import imgurClient from "./imgur";
 const multer = require("multer");
 const sharp = require("sharp");
 const path = require("path");
@@ -57,7 +59,7 @@ class controller extends c_controller {
 
       // for images
       if (mimeType == "image/jpeg" || mimeType == "image/png") {
-        url = `/uploads/images/${yearNumber}/${monthNumber}/${dayNumber}/${file}`;
+        url = `${process.env.FILE_HOST_DOMAIN}/uploads/images/${yearNumber}/${monthNumber}/${dayNumber}/${file}`;
         directory = `./src/uploads/images/${yearNumber}/${monthNumber}/${dayNumber}`;
         await createDir(directory);
         filePath = path.resolve(directory, file);
@@ -68,11 +70,21 @@ class controller extends c_controller {
           })
           .jpeg({ quality: 90 })
           .toFile(filePath);
+
+        if (process.env.ACTIVE_IMGUR) {
+          const response = await imgurClient.upload({
+            image: createReadStream(filePath),
+            type: "stream",
+          });
+          // console.log(response.data);
+          url = response.data.link;
+          fs.unlinkSync(filePath);
+        }
         fs.unlinkSync(req.files["file"][0].path);
       }
       // for svg
       else if (mimeType == "image/svg+xml") {
-        url = `/uploads/images/${yearNumber}/${monthNumber}/${dayNumber}/${file}`;
+        url = `${process.env.FILE_HOST_DOMAIN}/uploads/images/${yearNumber}/${monthNumber}/${dayNumber}/${file}`;
         directory = `./src/uploads/images/${yearNumber}/${monthNumber}/${dayNumber}`;
         await createDir(directory);
         filePath = path.resolve(directory, file);
@@ -84,7 +96,7 @@ class controller extends c_controller {
 
       // for movies
       else if (mimeType == "video/mp4") {
-        url = `/uploads/movies/${yearNumber}/${monthNumber}/${dayNumber}/${file}`;
+        url = `${process.env.FILE_HOST_DOMAIN}/uploads/movies/${yearNumber}/${monthNumber}/${dayNumber}/${file}`;
         directory = `./src/uploads/movies/${yearNumber}/${monthNumber}/${dayNumber}`;
         await createDir(directory);
         filePath = path.resolve(directory, file);
@@ -110,7 +122,7 @@ class controller extends c_controller {
         mimeType == "audio/mp4" ||
         mimeType == "audio/webm"
       ) {
-        url = `/uploads/audios/${yearNumber}/${monthNumber}/${dayNumber}/${file}`;
+        url = `${process.env.FILE_HOST_DOMAIN}/uploads/audios/${yearNumber}/${monthNumber}/${dayNumber}/${file}`;
         directory = `./src/uploads/audios/${yearNumber}/${monthNumber}/${dayNumber}`;
         await createDir(directory);
         filePath = path.resolve(directory, file);

@@ -29,6 +29,7 @@
     "express-rate-limit": "^6.7.0",
     "ffmpeg-extract-frames": "^2.0.2",
     "firebase-admin": "^11.9.0",
+    "imgur": "^2.3.0",
     "jsonwebtoken": "^9.0.0",
     "module-alias": "^2.2.2",
     "mongoose": "^7.1.1",
