@@ -28,6 +28,7 @@ class controller extends baseController {
   }
 
   async create(payload: Create): Promise<any> {
+    if (process.env.NODE_ENV == "published") return;
     const { params } = payload;
     const existRequest = await this.existRequest(params.slug);
     if (existRequest) return existRequest;

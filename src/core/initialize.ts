@@ -5,6 +5,7 @@ import requestCtrl from "@entity/request/controller";
 import { Request } from "@/entity/request/interface";
 import accessCtrl from "@entity/access/controller";
 import { User } from "@/entity/user/interface";
+import { Access } from "@/entity/access/interface";
 
 async function needInitialize(): Promise<boolean> {
   const countUsers: number = await userCtrl.countAll();
@@ -63,12 +64,33 @@ async function getSuperAdminRole() {
 async function setAccess() {
   const superAdminRole = await getSuperAdminRole();
   const requests = await requestCtrl.findAll({});
+  console.log("ount of requests:", requests.data.length);
+
+  // const currentSuperAdminAccess = await accessCtrl.findAll({
+  //   filters: { roleId: superAdminRole.id },
+  // });
+  // // list access must be added
+  // const accessNedded: Request[] = [];
+  // for (let i = 0; i < requests.data.length; i++) {
+  //   let request: Request = requests.data[i];
+  //   const haveAccess = currentSuperAdminAccess.data.filter(
+  //     (access: Access) => access.id == request.id
+  //   );
+  //   if (!haveAccess) accessNedded.push(request);
+  // }
+  // console.log("accessNedded:", accessNedded);
+
   for (let i = 0; i < requests.data.length; i++) {
     let request: Request = requests.data[i];
     const isExist = await accessCtrl.haveAccess({
       roleId: superAdminRole.id,
       requestId: request.id,
     });
+    if (isExist) {
+      console.log(`${i} + ${request.slug}`);
+    } else {
+      console.log(`${i} - ${request.slug}`);
+    }
     if (!isExist)
       await accessCtrl.create({
         params: {
@@ -99,6 +121,7 @@ async function createSuperAdmin() {
 }
 
 export default async function initialize() {
+  if (process.env.NODE_ENV == "published") return;
   const initialized: boolean = await needInitialize();
   if (!initialized) {
     const superAdminRole: Role = await createRoles();

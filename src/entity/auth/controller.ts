@@ -115,7 +115,8 @@ class controller extends c_controller {
       if (!foundUser.emailVerified) {
         try {
           verifyCtrl.sendEmailVerifyCode(email);
-          return res.json({ redirect: `/verify-email?email=${email}` });
+          return { redirect: `/verify-email?email=${email}` };
+          // return res.json({ redirect: `/verify-email?email=${email}` });
         } catch (error: any) {
           console.log(error?.message);
           // return res.status(400).json({ msg: "Unable to send verify email." });
