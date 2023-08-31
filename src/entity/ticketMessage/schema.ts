@@ -13,14 +13,15 @@ const ticketMessageSchema = new Schema<TicketMessage>(
   { timestamps: true }
 );
 
-var autoPopulateLead = function (next: any) {
-  this.populate("userId fileIds");
-  next();
-};
-
 ticketMessageSchema
-  .pre("findOne", autoPopulateLead)
-  .pre("find", autoPopulateLead);
+  .pre("findOne", function (next: any) {
+    this.populate("userId fileIds");
+    next();
+  })
+  .pre("find", function (next: any) {
+    this.populate("userId fileIds");
+    next();
+  });
 
 ticketMessageSchema.set("toObject", {
   transform: function (doc, ret, options) {

@@ -16,12 +16,15 @@ const ticketSchema = new Schema<Ticket>(
   { timestamps: true }
 );
 
-var autoPopulateLead = function (next: any) {
-  this.populate("userId departmentId operatorId");
-  next();
-};
-
-ticketSchema.pre("findOne", autoPopulateLead).pre("find", autoPopulateLead);
+ticketSchema
+  .pre("findOne", function (next: any) {
+    this.populate("userId departmentId operatorId");
+    next();
+  })
+  .pre("find", function (next: any) {
+    this.populate("userId departmentId operatorId");
+    next();
+  });
 
 ticketSchema.set("toObject", {
   transform: function (doc, ret, options) {

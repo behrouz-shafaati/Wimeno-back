@@ -16,12 +16,15 @@ const categorySchema = new Schema<Category>(
   { timestamps: true }
 );
 
-var autoPopulateLead = function (next: any) {
-  this.populate("avatar parentId");
-  next();
-};
-
-categorySchema.pre("findOne", autoPopulateLead).pre("find", autoPopulateLead);
+categorySchema
+  .pre("findOne", function (next: any) {
+    this.populate("avatar parentId");
+    next();
+  })
+  .pre("find", function (next: any) {
+    this.populate("avatar parentId");
+    next();
+  });
 
 categorySchema.set("toObject", {
   transform: function (doc, ret, options) {

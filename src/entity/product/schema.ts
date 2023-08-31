@@ -18,12 +18,15 @@ const productSchema = new Schema<Product>(
   { timestamps: true }
 );
 
-var autoPopulateLead = function (next: any) {
-  this.populate("images category");
-  next();
-};
-
-productSchema.pre("findOne", autoPopulateLead).pre("find", autoPopulateLead);
+productSchema
+  .pre("findOne", function (next: any) {
+    this.populate("images category");
+    next();
+  })
+  .pre("find", function (next: any) {
+    this.populate("images category");
+    next();
+  });
 
 productSchema.set("toObject", {
   transform: function (doc, ret, options) {

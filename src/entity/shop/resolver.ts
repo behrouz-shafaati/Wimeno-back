@@ -74,7 +74,7 @@ function resolver(app: any) {
   //   dependencies: [],
   // };
   // requestCtrl.create({ params: requestSearchPaylod });
-  app.get(`/${API_V}/shops/search`, async (req: Request, res: Response) => {
+  app.get(`/${API_V}/shops/search`, async (req: any, res: Response) => {
     try {
       const foundedShop = await shopCtrl.search(req.query);
       res.json(foundedShop);

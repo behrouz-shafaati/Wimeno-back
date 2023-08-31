@@ -126,7 +126,7 @@ class controller extends baseController {
     return result;
   }
 
-  async search({ query }: { query: string }): Promise<any> {
+  async search({ query }: { query: any }): Promise<any> {
     // const filters = this.standardizationFilters({ query });
     // const shopFounded = await super.find({ filters });
 

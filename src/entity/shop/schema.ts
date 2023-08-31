@@ -23,12 +23,15 @@ const shopSchema = new Schema<Shop>(
   { timestamps: true }
 );
 
-var autoPopulateLead = function (next: any) {
-  this.populate("logo cover");
-  next();
-};
-
-shopSchema.pre("findOne", autoPopulateLead).pre("find", autoPopulateLead);
+shopSchema
+  .pre("findOne", function (next: any) {
+    this.populate("logo cover");
+    next();
+  })
+  .pre("find", function (next: any) {
+    this.populate("logo cover");
+    next();
+  });
 
 shopSchema.set("toObject", {
   transform: function (doc, ret, options) {

@@ -12,12 +12,15 @@ const tabelSchema = new Schema<Tabel>(
   { timestamps: true }
 );
 
-var autoPopulateLead = function (next: any) {
-  this.populate("shopId");
-  next();
-};
-
-tabelSchema.pre("findOne", autoPopulateLead).pre("find", autoPopulateLead);
+tabelSchema
+  .pre("findOne", function (next: any) {
+    this.populate("shopId");
+    next();
+  })
+  .pre("find", function (next: any) {
+    this.populate("shopId");
+    next();
+  });
 
 tabelSchema.set("toObject", {
   transform: function (doc, ret, options) {

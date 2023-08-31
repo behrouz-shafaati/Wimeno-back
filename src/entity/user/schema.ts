@@ -34,18 +34,15 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-// userSchema.set("toObject", { virtuals: true, getters: true });
-// // // Duplicate the ID field.
-// userSchema.virtual("id").get(function () {
-//   return this._id.toHexString();
-// });
-
-var autoPopulateLead = function (next: any) {
-  this.populate("image roles");
-  next();
-};
-
-userSchema.pre("findOne", autoPopulateLead).pre("find", autoPopulateLead);
+userSchema
+  .pre("findOne", function (next: any) {
+    this.populate("image roles");
+    next();
+  })
+  .pre("find", function (next: any) {
+    this.populate("image roles");
+    next();
+  });
 
 userSchema.set("toObject", {
   transform: function (doc, ret, options) {
