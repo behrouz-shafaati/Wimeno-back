@@ -33,7 +33,6 @@ fileSchema.set("toObject", {
 fileSchema.set("toJSON", {
   transform: function (doc, ret, options) {
     ret.id = ret._id.toHexString();
-    ret.url = `${process.env.FILE_HOST_DOMAIN}${ret.url}`;
     delete ret._id;
     delete ret.__v;
     delete ret.deleted;
