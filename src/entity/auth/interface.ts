@@ -15,6 +15,7 @@ export type Auth = Model & {
 export type DisablePreviuosDeviceAuth = {
   userId: Id;
   deviceUUID: string;
+  origin: string; // site origin
 };
 
 export type Logout = DisablePreviuosDeviceAuth;
