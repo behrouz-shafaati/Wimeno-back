@@ -43,11 +43,10 @@ class controller extends c_controller {
   async disablePreviuosDeviceAuth({
     userId,
     deviceUUID,
-    origin,
   }: DisablePreviuosDeviceAuth) {
-    console.log("deactive this auth:", { userId, deviceUUID, origin });
+    console.log("deactive this auth:", { userId, deviceUUID });
     await this.updateMany({
-      filters: { userId, deviceUUID, origin },
+      filters: { userId, deviceUUID },
       params: { active: false },
     });
   }
@@ -65,7 +64,6 @@ class controller extends c_controller {
     await this.disablePreviuosDeviceAuth({
       userId: id,
       deviceUUID: deviceid,
-      origin,
     });
     await this.create({
       params: {
